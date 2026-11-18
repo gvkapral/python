@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Срок годности</string>
+    <string name="hint_name">Название продукта</string>
+    <string name="label_date">Дата покупки:</string>
+    <string name="label_shelf_life">Срок годности (дней):</string>
+    <string name="btn_change">Изменить</string>
+    <string name="btn_edit">Ввести</string>
+    <string name="btn_add">Добавить продукт</string>
+    <string name="list_empty">Список пуст. Добавьте первый продукт.</string>
+    <string name="shelf_life_zero">0 дн.</string>
+    <string name="shelf_life_format">%1$d дн.</string>
+    <string name="shelf_life_dialog_title">Срок годности в днях</string>
+    <string name="expiry_format">Истекает: %1$s</string>
+    <string name="days_left">осталось %1$d дн.</string>
+    <string name="days_expired">просрочено %1$d дн.</string>
+    <string name="days_today">истекает сегодня</string>
+    <string name="enter_name">Введите название продукта</string>
+    <string name="enter_shelf_life">Укажите срок годности (в днях)</string>
+</resources>
