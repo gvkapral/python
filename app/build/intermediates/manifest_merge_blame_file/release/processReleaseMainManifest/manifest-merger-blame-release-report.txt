@@ -6,7 +6,7 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="24"
-9        android:targetSdkVersion="34" />
+9        android:targetSdkVersion="36" />
 10
 11    <permission
 11-->[androidx.core:core:1.13.0] /root/.gradle/caches/transforms-4/906753b1313d0d6416aa8391cc212691/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
