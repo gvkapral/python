@@ -5,47 +5,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="@color/card_bg"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/card_border"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="14dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
 
             <TextView
-                android:id="@+id/tvItemName"
-                android:layout_width="match_parent"
+                android:id="@+id/tvItemDuration"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                tools:text="Молоко" />
+                tools:text="2 дня" />
 
-            <TextView
-                android:id="@+id/tvItemExpiry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#666666"
-                tools:text="Истекает: 01.01.2026" />
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/card_delete"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="@color/danger" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvItemDays"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:layout_marginBottom="2dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="@string/card_label_shelf"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/card_label_expires"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvItemExpiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/playfair"
+            android:textColor="@color/primary"
+            android:textSize="23sp"
             android:textStyle="bold"
-            tools:text="5 дн." />
+            tools:text="19 ноября 2026 г." />
+
+        <TextView
+            android:id="@+id/tvItemStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            tools:text="Дата начала: 18 нояб. 2026 г." />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

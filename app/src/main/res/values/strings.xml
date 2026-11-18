@@ -1,20 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Срок годности</string>
-    <string name="hint_name">Название продукта</string>
-    <string name="label_date">Дата покупки:</string>
-    <string name="label_shelf_life">Срок годности (дней):</string>
-    <string name="btn_change">Изменить</string>
-    <string name="btn_edit">Ввести</string>
-    <string name="btn_add">Добавить продукт</string>
-    <string name="list_empty">Список пуст. Добавьте первый продукт.</string>
-    <string name="shelf_life_zero">0 дн.</string>
-    <string name="shelf_life_format">%1$d дн.</string>
-    <string name="shelf_life_dialog_title">Срок годности в днях</string>
-    <string name="expiry_format">Истекает: %1$s</string>
-    <string name="days_left">осталось %1$d дн.</string>
-    <string name="days_expired">просрочено %1$d дн.</string>
-    <string name="days_today">истекает сегодня</string>
-    <string name="enter_name">Введите название продукта</string>
-    <string name="enter_shelf_life">Укажите срок годности (в днях)</string>
+    <string name="app_name">Freshmark</string>
+
+    <!-- Hero -->
+    <string name="brand_name">Freshmark</string>
+    <string name="eyebrow">СРОКИ ХРАНЕНИЯ ПРОДУКТОВ</string>
+    <string name="hero_title">Когда истекает срок годности?</string>
+    <string name="hero_subtitle">Укажите дату начала и срок хранения, чтобы узнать дату окончания.</string>
+
+    <!-- Шаг 01: дата начала -->
+    <string name="step_date_title">Дата начала</string>
+    <string name="step_date_hint">Введите дату начала в формате ДД.ММ.ГГГГ.</string>
+
+    <!-- Шаг 02: срок хранения -->
+    <string name="step_shelf_title">Срок хранения</string>
+    <string name="step_shelf_hint">Как долго продукт хранится с указанной даты?</string>
+    <string name="unit_day">Дни</string>
+    <string name="unit_week">Недели</string>
+    <string name="unit_month">Месяцы</string>
+    <string name="unit_year">Годы</string>
+
+    <!-- Результат -->
+    <string name="result_label">ДАТА ОКОНЧАНИЯ СРОКА</string>
+    <string name="result_hint">Предполагаемая дата окончания срока годности</string>
+    <string name="result_empty">Укажите срок хранения, чтобы увидеть дату</string>
+    <string name="btn_save">Сохранить расчёт</string>
+    <string name="disclaimer">Это примерный расчёт. Если на упаковке есть указания, следуйте им.</string>
+
+    <!-- Список -->
+    <string name="list_title">Сохранённые расчёты</string>
+    <string name="list_subtitle">Список сохранённых дат окончания срока</string>
+    <string name="list_empty">Пока нет сохранённых расчётов</string>
+    <string name="card_label_shelf">Срок хранения</string>
+    <string name="card_label_expires">Истекает</string>
+    <string name="card_start_format">Дата начала: %1$s</string>
+    <string name="card_delete">Удалить расчёт</string>
+    <string name="footer_note">Планирование помогает сократить количество пищевых отходов.</string>
+
+    <!-- Склонения -->
+    <string name="duration_format">%1$d %2$s</string>
+    <string name="unit_day_one">день</string>
+    <string name="unit_day_few">дня</string>
+    <string name="unit_day_many">дней</string>
+    <string name="unit_week_one">неделя</string>
+    <string name="unit_week_few">недели</string>
+    <string name="unit_week_many">недель</string>
+    <string name="unit_month_one">месяц</string>
+    <string name="unit_month_few">месяца</string>
+    <string name="unit_month_many">месяцев</string>
+    <string name="unit_year_one">год</string>
+    <string name="unit_year_few">года</string>
+    <string name="unit_year_many">лет</string>
 </resources>

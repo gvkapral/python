@@ -1,7 +1,6 @@
 package com.example.expiry;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,11 +28,24 @@ public class Storage {
             byte[] buf = new byte[(int) f.length()];
             int read = in.read(buf);
             String json = new String(buf, 0, Math.max(read, 0), StandardCharsets.UTF_8);
-            if (TextUtils.isEmpty(json)) return list;
+            if (json.trim().isEmpty()) return list;
             JSONArray arr = new JSONArray(json);
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject o = arr.getJSONObject(i);
-                list.add(new Product(o.getString("name"), o.getLong("expiry")));
+                if (o.has("expiry") && o.has("start")) {
+                    // новый формат: start + amount + unit + expiry
+                    String unit = o.optString("unit", Product.UNIT_DAY);
+                    list.add(new Product(null,
+                            o.getLong("start"),
+                            o.optInt("amount", 0),
+                            unit,
+                            o.getLong("expiry")));
+                } else if (o.has("name") && o.has("expiry")) {
+                    // legacy: name + expiry (дни от неизвестной даты)
+                    list.add(new Product(o.getString("name"),
+                            o.getLong("expiry"), 0, Product.UNIT_DAY,
+                            o.getLong("expiry")));
+                }
             }
         } catch (Exception e) {
             // повреждённый файл — начинаем с пустого списка
@@ -46,7 +58,9 @@ public class Storage {
         try {
             for (Product p : list) {
                 JSONObject o = new JSONObject();
-                o.put("name", p.name);
+                o.put("start", p.startEpochDay);
+                o.put("amount", p.amount);
+                o.put("unit", p.unit);
                 o.put("expiry", p.expiryEpochDay);
                 arr.put(o);
             }

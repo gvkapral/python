@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freshmark — превью Android-экрана</title>
+<style>
+  @font-face { font-family:'Inter'; font-weight:400; src:url('fonts/inter-400.ttf') format('truetype'); }
+  @font-face { font-family:'Inter'; font-weight:700; src:url('fonts/inter-700.ttf') format('truetype'); }
+  @font-face { font-family:'Inter'; font-weight:800; src:url('fonts/inter-800.ttf') format('truetype'); }
+  @font-face { font-family:'Playfair Display'; font-weight:700; src:url('fonts/playfair-700.ttf') format('truetype'); }
+
+  :root{
+    --primary:#E71DA7;        /* пурпурный акцент */
+    --text:#291323;           /* основной текст */
+    --muted:#826D7B;          /* вторичный текст */
+    --bg:#FFF9FD;             /* фон экрана */
+    --card:#FFFFFF;          /* карточки */
+    --card-border:#E9DCE5;   /* рамка карточек */
+    --accent-block:#FCEAF5;  /* розовый блок результата */
+    --badge1:#FCE4F3;        /* бейдж 01 */
+    --badge2:#E4F5F1;        /* бейдж 02 */
+    --teal:#14A89A;          /* teal-лейблы */
+    --danger:#D93851;        /* иконка удаления */
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-font-smoothing:antialiased; }
+  body{
+    background:#EDE7EA; font-family:'Inter',sans-serif; color:var(--text);
+    display:flex; justify-content:center; align-items:flex-start; min-height:100vh; padding:32px 12px;
+  }
+  .desk-note{
+    position:fixed; left:16px; top:16px; font-size:12px; color:#8A7A84; max-width:220px; line-height:1.5;
+  }
+  /* рамка телефона */
+  .phone{
+    width:390px; max-width:100%; background:var(--bg); border-radius:24px; overflow:hidden;
+    box-shadow:0 20px 60px rgba(41,19,35,.18), 0 2px 8px rgba(41,19,35,.10);
+    display:flex; flex-direction:column; height:844px;
+  }
+  .statusbar{
+    height:28px; flex:0 0 auto; display:flex; justify-content:space-between; align-items:center;
+    padding:0 18px; font-size:11px; font-weight:700; color:var(--text);
+  }
+  .content{ flex:1; overflow-y:auto; padding:16px 24px 40px; }
+
+  /* бренд-чип */
+  .brand{ display:flex; align-items:center; gap:8px; margin-bottom:20px; }
+  .brand-ico{
+    width:28px; height:28px; border-radius:999px; background:var(--badge1);
+    display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:15px;
+  }
+  .brand-name{ font-weight:800; font-size:12px; letter-spacing:.4px; }
+
+  .eyebrow{ color:var(--primary); font-weight:800; font-size:12px; letter-spacing:.8px; margin-bottom:8px; }
+  .hero{ font-family:'Playfair Display',serif; font-weight:700; font-size:35px; line-height:1.12; margin-bottom:8px; }
+  .sub{ color:var(--muted); font-size:15px; line-height:1.5; margin-bottom:20px; }
+
+  /* карточка шага */
+  .step{
+    background:var(--card); border:0.8px solid var(--card-border); border-radius:2px;
+    padding:24px; margin-bottom:12px;
+  }
+  .step-head{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .step-badge{
+    width:24px; height:24px; border-radius:999px; display:flex; align-items:center; justify-content:center;
+    color:var(--primary); font-weight:800; font-size:12px;
+  }
+  .badge-pink{ background:var(--badge1); }
+  .badge-mint{ background:var(--badge2); }
+  .step-title{ font-weight:700; font-size:15px; }
+  .step-hint{ color:var(--muted); font-size:12px; line-height:1.5; margin-bottom:14px; }
+  .field{
+    border-bottom:1px solid var(--card-border); padding:6px 0 8px; display:flex; align-items:center; gap:8px;
+  }
+  .field input{
+    border:none; outline:none; background:transparent; font-family:'Inter',sans-serif;
+    font-size:15px; color:var(--text); width:100%; padding:0;
+  }
+  .field .icon{ color:var(--muted); font-size:16px; width:20px; text-align:center; }
+  .field-big input{ font-size:22px; font-weight:700; }
+
+  /* сегмент единиц */
+  .units{ display:flex; gap:8px; margin-top:16px; }
+  .units button{
+    flex:1; height:32px; border-radius:999px; border:0.8px solid var(--card-border);
+    background:transparent; color:var(--muted); font-family:'Inter',sans-serif;
+    font-weight:700; font-size:12px; cursor:pointer; transition:all .15s;
+  }
+  .units button.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+
+  /* блок результата */
+  .result{
+    background:var(--accent-block); border-radius:2px; padding:24px; margin-bottom:12px; text-align:center;
+  }
+  .result-label{ color:var(--primary); font-weight:800; font-size:12px; letter-spacing:.8px; margin-bottom:4px; }
+  .result-hint{ color:var(--muted); font-size:12px; margin-bottom:14px; }
+  .result-date{ font-family:'Playfair Display',serif; font-weight:700; font-size:27px; color:var(--primary); margin-bottom:16px; min-height:34px; }
+  .btn-save{
+    width:100%; height:48px; border-radius:999px; border:none; background:var(--primary); color:#fff;
+    font-family:'Inter',sans-serif; font-weight:800; font-size:15px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px; transition:opacity .15s;
+  }
+  .btn-save:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-save .bi{ font-size:17px; }
+
+  .disclaimer{
+    display:flex; gap:8px; align-items:flex-start; color:var(--muted); font-size:12px;
+    line-height:1.5; margin-bottom:28px;
+  }
+  .disclaimer .bi{ color:var(--teal); font-size:16px; margin-top:1px; }
+
+  /* список расчётов */
+  .list-title{ font-family:'Playfair Display',serif; font-weight:700; font-size:22px; margin-bottom:2px; }
+  .list-sub{ color:var(--muted); font-size:12px; margin-bottom:14px; }
+  .card{
+    background:var(--card); border:0.8px solid var(--card-border); border-radius:2px;
+    padding:16px; margin-bottom:10px;
+  }
+  .card-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .card-duration{ font-weight:700; font-size:15px; }
+  .card-del{
+    background:none; border:none; color:var(--danger); font-size:18px; cursor:pointer; padding:4px 8px;
+  }
+  .card-label{ color:var(--teal); font-weight:700; font-size:12px; margin-bottom:2px; }
+  .card-caption{ color:var(--muted); font-size:12px; margin-bottom:10px; }
+  .card-expiry{ font-family:'Playfair Display',serif; font-weight:700; font-size:23px; color:var(--primary); margin-bottom:4px; }
+  .card-start{ color:var(--muted); font-size:12px; }
+
+  .empty{ color:var(--muted); font-size:13px; text-align:center; padding:12px 0 24px; }
+
+  .footer{
+    display:flex; gap:8px; align-items:flex-start; color:var(--muted); font-size:12px; line-height:1.5; margin-top:8px;
+  }
+  .footer .bi{ color:var(--primary); font-size:16px; }
+</style>
+</head>
+<body>
+
+<div class="desk-note">Превью экрана Android-приложения Freshmark. 1px ≈ 1dp.</div>
+
+<div class="phone">
+  <div class="statusbar"><span>9:41</span><span>●●● ▮▮▮</span></div>
+  <div class="content">
+
+    <div class="brand">
+      <div class="brand-ico">★</div>
+      <div class="brand-name">Freshmark</div>
+    </div>
+
+    <div class="eyebrow">СРОКИ ХРАНЕНИЯ ПРОДУКТОВ</div>
+    <div class="hero">Когда истекает срок годности?</div>
+    <div class="sub">Укажите дату начала и срок хранения, чтобы узнать дату окончания.</div>
+
+    <!-- 01 Дата начала -->
+    <div class="step">
+      <div class="step-head">
+        <div class="step-badge badge-pink">01</div>
+        <div class="step-title">Дата начала</div>
+      </div>
+      <div class="step-hint">Введите дату начала в формате ДД.ММ.ГГГГ.</div>
+      <div class="field">
+        <span class="icon">📅</span>
+        <input id="startDate" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" autocomplete="off">
+      </div>
+    </div>
+
+    <!-- 02 Срок хранения -->
+    <div class="step">
+      <div class="step-head">
+        <div class="step-badge badge-mint">02</div>
+        <div class="step-title">Срок хранения</div>
+      </div>
+      <div class="step-hint">Как долго продукт хранится с указанной даты?</div>
+      <div class="field field-big">
+        <input id="amount" inputmode="numeric" placeholder="0" autocomplete="off">
+      </div>
+      <div class="units">
+        <button data-unit="day" class="active">Дни</button>
+        <button data-unit="week">Недели</button>
+        <button data-unit="month">Месяцы</button>
+        <button data-unit="year">Годы</button>
+      </div>
+    </div>
+
+    <!-- Результат -->
+    <div class="result">
+      <div class="result-label">ДАТА ОКОНЧАНИЯ СРОКА</div>
+      <div class="result-hint">Предполагаемая дата окончания срока годности</div>
+      <div class="result-date" id="resultDate">Укажите срок хранения, чтобы увидеть дату</div>
+      <button class="btn-save" id="btnSave" disabled><span class="bi">＋</span> Сохранить расчёт</button>
+    </div>
+
+    <div class="disclaimer">
+      <span class="bi">ⓘ</span>
+      <span>Это примерный расчёт. Если на упаковке есть указания, следуйте им.</span>
+    </div>
+
+    <!-- Сохранённые расчёты -->
+    <div class="list-title">Сохранённые расчёты</div>
+    <div class="list-sub">Список сохранённых дат окончания срока</div>
+    <div id="list"></div>
+
+    <div class="footer">
+      <span class="bi">🌿</span>
+      <span>Планирование помогает сократить количество пищевых отходов.</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const MONTHS_SHORT = ['янв.','февр.','мар.','апр.','мая','июн.','июл.','авг.','сент.','окт.','нояб.','дек.'];
+const $ = id => document.getElementById(id);
+
+let unit = 'day';
+let items = JSON.parse(localStorage.getItem('freshmark') || '[]');
+
+const parseDate = s => {
+  const m = s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if (!m) return null;
+  const d = new Date(+m[3], +m[2]-1, +m[1]);
+  if (isNaN(d)) return null;
+  // проверка переполнения (например, 31.02 или 99.99)
+  if (d.getDate() !== +m[1] || d.getMonth() !== +m[2]-1) return null;
+  return d;
+};
+const fmtLong = d => `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()} г.`;
+const fmtShort = d => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()} г.`;
+const plural = (n, one, few, many) => {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
+  return many;
+};
+const durationText = (amount, unit) => ({
+  day:   `${amount} ${plural(amount,'день','дня','дней')}`,
+  week:  `${amount} ${plural(amount,'неделя','недели','недель')}`,
+  month: `${amount} ${plural(amount,'месяц','месяца','месяцев')}`,
+  year:  `${amount} ${plural(amount,'год','года','лет')}`
+}[unit]);
+
+function calcExpiry(start, amount, unit){
+  const d = new Date(start);
+  if (unit === 'day')   d.setDate(d.getDate() + amount);
+  if (unit === 'week')  d.setDate(d.getDate() + amount * 7);
+  if (unit === 'month') d.setMonth(d.getMonth() + amount);
+  if (unit === 'year')  d.setFullYear(d.getFullYear() + amount);
+  return d;
+}
+
+function state(){
+  const start = parseDate($('startDate').value);
+  const amount = parseInt($('amount').value, 10);
+  const valid = start && amount > 0;
+  $('resultDate').textContent = valid
+    ? fmtLong(calcExpiry(start, amount, unit))
+    : 'Укажите срок хранения, чтобы увидеть дату';
+  $('resultDate').style.fontSize = valid ? '27px' : '15px';
+  $('resultDate').style.color = valid ? 'var(--primary)' : 'var(--muted)';
+  $('resultDate').style.fontFamily = valid ? "'Playfair Display',serif" : "'Inter',sans-serif";
+  $('resultDate').style.fontWeight = valid ? 700 : 400;
+  $('btnSave').disabled = !valid;
+}
+
+function render(){
+  const box = $('list');
+  box.innerHTML = '';
+  if (!items.length){
+    box.innerHTML = '<div class="empty">Пока нет сохранённых расчётов</div>';
+    return;
+  }
+  items.forEach((it, i) => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `
+      <div class="card-top">
+        <div class="card-duration">${durationText(it.amount, it.unit)}</div>
+        <button class="card-del" data-i="${i}" title="Удалить расчёт">🗑</button>
+      </div>
+      <div class="card-label">Срок хранения</div>
+      <div class="card-caption">Истекает</div>
+      <div class="card-expiry">${fmtLong(new Date(it.expiry))}</div>
+      <div class="card-start">Дата начала: ${fmtShort(new Date(it.start))}</div>`;
+    box.appendChild(el);
+  });
+  box.querySelectorAll('.card-del').forEach(b =>
+    b.addEventListener('click', () => { items.splice(+b.dataset.i, 1); save(); render(); }));
+}
+
+function save(){ localStorage.setItem('freshmark', JSON.stringify(items)); }
+
+// дата по умолчанию — сегодня
+const today = new Date();
+$('startDate').value = `${String(today.getDate()).padStart(2,'0')}.${String(today.getMonth()+1).padStart(2,'0')}.${today.getFullYear()}`;
+
+// маска даты ДД.ММ.ГГГГ
+$('startDate').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,8);
+  if (v.length > 4) v = v.slice(0,2) + '.' + v.slice(2,4) + '.' + v.slice(4);
+  else if (v.length > 2) v = v.slice(0,2) + '.' + v.slice(2);
+  e.target.value = v;
+  state();
+});
+$('amount').addEventListener('input', e => {
+  e.target.value = e.target.value.replace(/\D/g,'').slice(0,4);
+  state();
+});
+
+document.querySelectorAll('.units button').forEach(b =>
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.units button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    unit = b.dataset.unit;
+    state();
+  }));
+
+$('btnSave').addEventListener('click', () => {
+  const start = parseDate($('startDate').value);
+  const amount = parseInt($('amount').value, 10);
+  if (!start || !amount) return;
+  items.push({ start: start.getTime(), amount, unit, expiry: calcExpiry(start, amount, unit).getTime() });
+  items.sort((a,b) => a.expiry - b.expiry);
+  save(); render();
+  $('amount').value = '';
+  state();
+});
+
+state();
+render();
+</script>
+</body>
+</html>
