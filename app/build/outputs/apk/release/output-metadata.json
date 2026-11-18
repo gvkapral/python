@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.expiry",
+  "applicationId": "com.example.expirydates",
   "variantName": "release",
   "elements": [
     {
