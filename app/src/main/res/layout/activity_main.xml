@@ -212,8 +212,10 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="0"
+                    android:imeOptions="actionDone"
                     android:inputType="number"
                     android:maxLength="4"
+                    android:maxLines="1"
                     android:paddingTop="4dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/text_primary"
@@ -222,78 +224,171 @@
                     android:textStyle="bold"
                     android:importantForAutofill="no" />
 
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/unitToggle"
+                <!-- Пресеты длительности -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/preset3"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_preset"
+                        android:fontFamily="@font/inter_bold"
+                        android:minWidth="0dp"
+                        android:stateListAnimator="@null"
+                        android:text="3"
+                        android:textColor="@color/primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/preset7"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_preset"
+                        android:fontFamily="@font/inter_bold"
+                        android:minWidth="0dp"
+                        android:stateListAnimator="@null"
+                        android:text="7"
+                        android:textColor="@color/primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/preset14"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_preset"
+                        android:fontFamily="@font/inter_bold"
+                        android:minWidth="0dp"
+                        android:stateListAnimator="@null"
+                        android:text="14"
+                        android:textColor="@color/primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/preset30"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_preset"
+                        android:fontFamily="@font/inter_bold"
+                        android:minWidth="0dp"
+                        android:stateListAnimator="@null"
+                        android:text="30"
+                        android:textColor="@color/primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/preset90"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_preset"
+                        android:fontFamily="@font/inter_bold"
+                        android:minWidth="0dp"
+                        android:stateListAnimator="@null"
+                        android:text="90"
+                        android:textColor="@color/primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <!-- Единицы: сетка 2×2 -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    app:selectionRequired="true"
-                    app:singleSelection="true">
+                    android:orientation="vertical">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnUnitDay"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:text="@string/unit_day"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="999dp"
-                        app:strokeColor="@color/card_border"
-                        app:strokeWidth="1dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnUnitWeek"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:text="@string/unit_week"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="999dp"
-                        app:strokeColor="@color/card_border"
-                        app:strokeWidth="1dp" />
+                        <Button
+                            android:id="@+id/btnUnitDay"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_unit_unselected"
+                            android:fontFamily="@font/inter_bold"
+                            android:minWidth="0dp"
+                            android:stateListAnimator="@null"
+                            android:text="@string/unit_day"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnUnitMonth"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:text="@string/unit_month"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="999dp"
-                        app:strokeColor="@color/card_border"
-                        app:strokeWidth="1dp" />
+                        <Button
+                            android:id="@+id/btnUnitWeek"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_unit_unselected"
+                            android:fontFamily="@font/inter_bold"
+                            android:minWidth="0dp"
+                            android:stateListAnimator="@null"
+                            android:text="@string/unit_week"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnUnitYear"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:text="@string/unit_year"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="999dp"
-                        app:strokeColor="@color/card_border"
-                        app:strokeWidth="1dp" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnUnitMonth"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_unit_unselected"
+                            android:fontFamily="@font/inter_bold"
+                            android:minWidth="0dp"
+                            android:stateListAnimator="@null"
+                            android:text="@string/unit_month"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btnUnitYear"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_unit_unselected"
+                            android:fontFamily="@font/inter_bold"
+                            android:minWidth="0dp"
+                            android:stateListAnimator="@null"
+                            android:text="@string/unit_year"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

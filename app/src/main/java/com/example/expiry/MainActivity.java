@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     private LocalDate startDate = LocalDate.now();
     private String unit = Product.UNIT_DAY;
+    private final Button[] unitButtons = new Button[4];
+    private final String[] unitValues = {
+            Product.UNIT_DAY, Product.UNIT_WEEK, Product.UNIT_MONTH, Product.UNIT_YEAR };
 
     private final DateTimeFormatter fmtInput = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final DateTimeFormatter fmtLong =
@@ -54,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
         products.clear();
         products.addAll(Storage.load(this));
+        // пересчёт по новой формуле (день начала = первый день хранения)
+        for (int i = 0; i < products.size(); i++) {
+            Product p = products.get(i);
+            if (p.hasDuration()) {
+                products.set(i, new Product(p.name, p.startEpochDay, p.amount, p.unit,
+                        calcExpiry(LocalDate.ofEpochDay(p.startEpochDay), p.amount, p.unit).toEpochDay()));
+            }
+        }
 
         etDate = findViewById(R.id.etDate);
         etAmount = findViewById(R.id.etAmount);
@@ -72,16 +83,26 @@ public class MainActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) { recalc(); }
         });
 
-        MaterialButtonToggleGroup unitToggle = findViewById(R.id.unitToggle);
-        unitToggle.check(R.id.btnUnitDay);
-        unitToggle.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (!isChecked) return;
-            if (checkedId == R.id.btnUnitDay) unit = Product.UNIT_DAY;
-            else if (checkedId == R.id.btnUnitWeek) unit = Product.UNIT_WEEK;
-            else if (checkedId == R.id.btnUnitMonth) unit = Product.UNIT_MONTH;
-            else if (checkedId == R.id.btnUnitYear) unit = Product.UNIT_YEAR;
-            recalc();
-        });
+        // единицы: сетка 2×2, выбор вручную
+        unitButtons[0] = findViewById(R.id.btnUnitDay);
+        unitButtons[1] = findViewById(R.id.btnUnitWeek);
+        unitButtons[2] = findViewById(R.id.btnUnitMonth);
+        unitButtons[3] = findViewById(R.id.btnUnitYear);
+        for (int i = 0; i < unitButtons.length; i++) {
+            final String value = unitValues[i];
+            unitButtons[i].setOnClickListener(v -> setUnit(value));
+        }
+        setUnit(Product.UNIT_DAY);
+
+        // пресеты длительности — подставляют значение без клавиатуры
+        int[] presetIds = { R.id.preset3, R.id.preset7, R.id.preset14, R.id.preset30, R.id.preset90 };
+        for (int id : presetIds) {
+            Button b = findViewById(id);
+            b.setOnClickListener(v -> {
+                etAmount.setText(b.getText().toString());
+                etAmount.setSelection(etAmount.getText().length());
+            });
+        }
 
         btnSave.setOnClickListener(v -> saveCalculation());
 
@@ -119,14 +140,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private LocalDate calcExpiry(LocalDate start, int amount, String unit) {
-        switch (unit) {
-            case Product.UNIT_WEEK:  return start.plusWeeks(amount);
-            case Product.UNIT_MONTH: return start.plusMonths(amount);
-            case Product.UNIT_YEAR:  return start.plusYears(amount);
-            case Product.UNIT_DAY:
-            default:                 return start.plusDays(amount);
+    private void setUnit(String value) {
+        unit = value;
+        for (int i = 0; i < unitButtons.length; i++) {
+            boolean selected = unitValues[i].equals(value);
+            unitButtons[i].setBackgroundResource(selected
+                    ? R.drawable.bg_unit_selected : R.drawable.bg_unit_unselected);
+            unitButtons[i].setTextColor(getColor(selected
+                    ? R.color.white : R.color.text_secondary));
         }
+        recalc();
+    }
+
+    private LocalDate calcExpiry(LocalDate start, int amount, String unit) {
+        // день начала считается первым днём хранения → окончание = начало + срок − 1 день
+        LocalDate shifted;
+        switch (unit) {
+            case Product.UNIT_WEEK:  shifted = start.plusWeeks(amount); break;
+            case Product.UNIT_MONTH: shifted = start.plusMonths(amount); break;
+            case Product.UNIT_YEAR:  shifted = start.plusYears(amount); break;
+            case Product.UNIT_DAY:
+            default:                 shifted = start.plusDays(amount); break;
+        }
+        return shifted.minusDays(1);
     }
 
     private void recalc() {

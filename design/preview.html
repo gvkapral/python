@@ -80,14 +80,23 @@
   .field .icon{ color:var(--muted); font-size:16px; width:20px; text-align:center; }
   .field-big input{ font-size:22px; font-weight:700; }
 
-  /* сегмент единиц */
-  .units{ display:flex; gap:8px; margin-top:16px; }
+  /* сетка единиц 2×2 */
+  .units{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px; }
   .units button{
-    flex:1; height:32px; border-radius:999px; border:0.8px solid var(--card-border);
+    height:40px; border-radius:999px; border:0.8px solid var(--card-border);
     background:transparent; color:var(--muted); font-family:'Inter',sans-serif;
     font-weight:700; font-size:12px; cursor:pointer; transition:all .15s;
   }
   .units button.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+
+  /* пресеты длительности */
+  .presets{ display:flex; gap:8px; margin-top:14px; }
+  .presets button{
+    flex:1; height:36px; border-radius:999px; border:0.8px solid var(--card-border);
+    background:var(--badge1); color:var(--primary); font-family:'Inter',sans-serif;
+    font-weight:700; font-size:12px; cursor:pointer; transition:all .15s;
+  }
+  .presets button:hover{ background:var(--primary); color:#fff; }
 
   /* блок результата */
   .result{
@@ -175,6 +184,13 @@
       <div class="field field-big">
         <input id="amount" inputmode="numeric" placeholder="0" autocomplete="off">
       </div>
+      <div class="presets">
+        <button data-preset="3">3</button>
+        <button data-preset="7">7</button>
+        <button data-preset="14">14</button>
+        <button data-preset="30">30</button>
+        <button data-preset="90">90</button>
+      </div>
       <div class="units">
         <button data-unit="day" class="active">Дни</button>
         <button data-unit="week">Недели</button>
@@ -216,6 +232,10 @@ const $ = id => document.getElementById(id);
 
 let unit = 'day';
 let items = JSON.parse(localStorage.getItem('freshmark') || '[]');
+// пересчёт сохранённых по новой формуле (начало = первый день хранения)
+items = items.map(it => it.amount > 0
+  ? { ...it, expiry: calcExpiry(new Date(it.start), it.amount, it.unit).getTime() }
+  : it);
 
 const parseDate = s => {
   const m = s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
@@ -242,11 +262,13 @@ const durationText = (amount, unit) => ({
 }[unit]);
 
 function calcExpiry(start, amount, unit){
+  // день начала считается первым днём хранения → окончание = начало + срок − 1 день
   const d = new Date(start);
   if (unit === 'day')   d.setDate(d.getDate() + amount);
   if (unit === 'week')  d.setDate(d.getDate() + amount * 7);
   if (unit === 'month') d.setMonth(d.getMonth() + amount);
   if (unit === 'year')  d.setFullYear(d.getFullYear() + amount);
+  d.setDate(d.getDate() - 1);
   return d;
 }
 
@@ -313,6 +335,12 @@ document.querySelectorAll('.units button').forEach(b =>
     document.querySelectorAll('.units button').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
     unit = b.dataset.unit;
+    state();
+  }));
+
+document.querySelectorAll('.presets button').forEach(b =>
+  b.addEventListener('click', () => {
+    $('amount').value = b.dataset.preset;
     state();
   }));
 
